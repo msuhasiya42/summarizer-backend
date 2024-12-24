@@ -1,0 +1,60 @@
+plugins {
+    id 'base'
+    id 'scala'  // Apply the Scala plugin
+    id 'java-library'  // Apply the Java Library plugin for packaging and exposing the library
+    id 'io.spring.dependency-management' version '1.1.6' // Add Spring dependency management plugin
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies
+    mavenCentral()
+}
+
+dependencies {
+    // Scala library dependency for Scala 2.13
+    implementation 'org.scala-lang:scala-library:2.13.7'
+
+    // Spring Boot dependencies
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Test dependencies
+    testImplementation 'org.scalatest:scalatest_2.13:3.2.9'
+    testImplementation 'junit:junit:4.13.2'
+
+    // Optional: Scala XML dependency (if needed)
+    testRuntimeOnly 'org.scala-lang.modules:scala-xml_2.13:1.2.0'
+
+    //    jackson
+    implementation 'com.fasterxml.jackson.module:jackson-module-scala_3:2.18.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+}
+
+// Apply Spring dependency management plugin to handle versions
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.4.0' // Use the correct Spring Boot version
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'Summarizer Library',
+                'Implementation-Version': version
+        )
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)  // Ensure it's using JVM 17
+    }
+}
+
+// Add tasks for building and testing Scala-based code
+test {
+    useJUnitPlatform() // Use JUnit for testing
+}
